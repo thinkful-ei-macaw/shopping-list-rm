@@ -1,10 +1,10 @@
 'use strict';
 
 const STORE = [
-  {id: cuid(), name: "apples", checked: false},
-  {id: cuid(), name: "oranges", checked: false},
-  {id: cuid(), name: "milk", checked: true},
-  {id: cuid(), name: "bread", checked: false}
+  { id: cuid(), name: "apples", checked: false },
+  { id: cuid(), name: "oranges", checked: false },
+  { id: cuid(), name: "milk", checked: true },
+  { id: cuid(), name: "bread", checked: false }
 ];
 
 
@@ -28,7 +28,7 @@ function generateShoppingItemsString(shoppingList) {
   console.log("Generating shopping list element");
 
   const items = shoppingList.map((item) => generateItemElement(item));
-  
+
   return items.join("");
 }
 
@@ -45,11 +45,11 @@ function renderShoppingList() {
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({id: cuid(), name: itemName, checked: false});
+  STORE.push({ id: cuid(), name: itemName, checked: false });
 }
 
 function handleNewItemSubmit() {
-  $('#js-shopping-list-form').submit(function(event) {
+  $('#js-shopping-list-form').submit(function (event) {
     event.preventDefault();
     console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
@@ -72,6 +72,12 @@ function getItemIdFromElement(item) {
     .data('item-id');
 }
 
+function deletingListItem(itemId) {
+  console.log("Deleting item with id" + itemId);
+  const item = STORE.find(item => item.id === itemId);
+  let index = STORE.indexOf(item);
+  STORE.splice(index, 1);
+}
 function handleItemCheckClicked() {
   $('.js-shopping-list').on('click', `.js-item-toggle`, event => {
     console.log('`handleItemCheckClicked` ran');
@@ -83,9 +89,13 @@ function handleItemCheckClicked() {
 
 
 function handleDeleteItemClicked() {
-  // this function will be responsible for when users want to delete a shopping list
-  // item
-  console.log('`handleDeleteItemClicked` ran')
+  $('.js-shopping-list').on('click', `.js-item-delete`, event => {
+    console.log('`handleDeleteItemClicked` ran')
+    const id = getItemIdFromElement(event.currentTarget);
+    deletingListItem(id);
+    renderShoppingList();
+  });
+
 }
 
 // this function will be our callback when the page loads. it's responsible for
